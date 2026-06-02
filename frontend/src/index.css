@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #020617;
+  color: #ffffff;
+}
+
+.section {
+  padding: 88px 10%;
+}
+
+.section-title {
+  font-size: 34px;
+  font-weight: 800;
+  margin-bottom: 18px;
+  color: #ffffff;
+}
+
+.section-subtitle {
+  color: #94a3b8;
+  max-width: 760px;
+  line-height: 1.8;
+  margin-bottom: 36px;
+}

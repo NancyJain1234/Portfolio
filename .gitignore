@@ -1,5 +1,5 @@
 backend/lambda_package/
-backend-lambda.zip
+backend/backend-lambda.zip
 backend/venv/
-__pycache__/
 .env
+__pycache__/

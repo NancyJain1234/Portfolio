@@ -1,9 +1,9 @@
 import { useState } from "react";
 
 const API_URL =
-  "https://4tuojd3urjilgxo4cvzz5alin40poezc.lambda-url.ap-south-1.on.aws/api/contact";
-  
-const Contact = () => {
+  "https://4tuojd3urjilgxo4cvzz5alin40poezc.lambda-url.ap-south-1.on.aws/";
+
+  const Contact = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -48,7 +48,7 @@ const Contact = () => {
         message: "",
       });
     } catch (error) {
-      setStatus("Backend is not running. Please start FastAPI server.");
+      setStatus("Unable to send message. Please try again.");
     }
   };
 

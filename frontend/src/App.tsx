@@ -7,6 +7,7 @@ import Experience from "./components/Experience";
 import Achievements from "./components/Achievements";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
+import MediaGallery from "./components/MediaGallery";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
       <Skills />
       <Experience />
       <Achievements />
+      <MediaGallery />
       <Contact />
       <Footer />
     </div>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Admin Media Upload</title>
+</head>
+<body>
+
+<h2>Portfolio Media Upload</h2>
+
+<input type="password" id="secret" placeholder="Admin Secret">
+<br><br>
+
+<input type="text" id="title" placeholder="Title">
+<br><br>
+
+<input type="text" id="description" placeholder="Description">
+<br><br>
+
+<select id="type">
+  <option value="project_video">Project Video</option>
+  <option value="event_photo">Event Photo</option>
+  <option value="certificate">Certificate</option>
+</select>
+
+<br><br>
+
+<input type="file" id="file" accept="image/*,video/*,.pdf">
+
+<br><br>
+
+<button onclick="uploadMedia()">Upload</button>
+
+<p id="status"></p>
+
+<script>
+const GENERATE_UPLOAD_URL = "https://mez4ale3yaeg7qgnxhqvd2tfze0gdriq.lambda-url.ap-south-1.on.aws/";
+const SAVE_MEDIA_URL = "https://536i4uxik3pxg5u6j64ldbvwwm0uvnlz.lambda-url.ap-south-1.on.aws/";
+
+async function uploadMedia() {
+  const status = document.getElementById("status");
+
+  const file = document.getElementById("file").files[0];
+  const title = document.getElementById("title").value.trim();
+  const description = document.getElementById("description").value.trim();
+  const type = document.getElementById("type").value;
+  const secret = document.getElementById("secret").value.trim();
+
+  if (!secret) {
+    status.innerText = "Enter admin secret";
+    return;
+  }
+
+  if (!title || !description) {
+    status.innerText = "Enter title and description";
+    return;
+  }
+
+  if (!file) {
+    status.innerText = "Choose a file first";
+    return;
+  }
+
+  try {
+    status.innerText = "Generating upload URL...";
+
+    const uploadResponse = await fetch(GENERATE_UPLOAD_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-secret": secret
+      },
+      body: JSON.stringify({
+        fileName: file.name,
+        fileType: file.type || "application/octet-stream"
+      })
+    });
+
+    const uploadBody = await uploadResponse.json();
+
+    if (!uploadResponse.ok || !uploadBody.success) {
+      status.innerText = uploadBody.message || "Failed to generate upload URL";
+      console.log(uploadBody);
+      return;
+    }
+
+    status.innerText = "Uploading file to S3...";
+
+    const s3Response = await fetch(uploadBody.uploadUrl, {
+      method: "PUT",
+      headers: {
+        "Content-Type": file.type || "application/octet-stream"
+      },
+      body: file
+    });
+
+    if (!s3Response.ok) {
+      status.innerText = "S3 upload failed";
+      console.log(await s3Response.text());
+      return;
+    }
+
+    status.innerText = "Saving details in DynamoDB...";
+
+    const saveResponse = await fetch(SAVE_MEDIA_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-secret": secret
+      },
+      body: JSON.stringify({
+        title: title,
+        description: description,
+        type: type,
+        fileUrl: uploadBody.fileUrl,
+        s3Key: uploadBody.s3Key,
+        fileName: file.name
+      })
+    });
+
+    const saveBody = await saveResponse.json();
+
+    if (!saveResponse.ok || !saveBody.success) {
+      status.innerText = saveBody.message || "Save failed";
+      console.log(saveBody);
+      return;
+    }
+
+    status.innerText = "Upload Successful!";
+  } catch (error) {
+    status.innerText = "Error: " + error.message;
+    console.error(error);
+  }
+}
+</script>
+
+</body>
+</html>

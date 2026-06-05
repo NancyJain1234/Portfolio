@@ -1,39 +1,349 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Media Upload</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(14, 165, 233, 0.22), transparent 32%),
+        radial-gradient(circle at bottom right, rgba(56, 189, 248, 0.12), transparent 35%),
+        #020617;
+      color: #e5e7eb;
+      padding: 32px 18px;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 34px;
+    }
+
+    .brand {
+      font-size: 22px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: 0.4px;
+    }
+
+    .brand span {
+      color: #38bdf8;
+    }
+
+    .back-link {
+      color: #cbd5e1;
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.7);
+      transition: 0.2s;
+      font-size: 14px;
+    }
+
+    .back-link:hover {
+      color: #38bdf8;
+      border-color: rgba(56, 189, 248, 0.55);
+    }
+
+    .hero {
+      margin-bottom: 28px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(14, 165, 233, 0.12);
+      color: #7dd3fc;
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      font-size: 13px;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      font-size: clamp(32px, 5vw, 54px);
+      line-height: 1.05;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+
+    .subtitle {
+      max-width: 680px;
+      color: #94a3b8;
+      line-height: 1.7;
+      font-size: 16px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .card {
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(15, 23, 42, 0.72);
+      backdrop-filter: blur(18px);
+      border-radius: 24px;
+      padding: 26px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+    }
+
+    .card h2 {
+      color: #fff;
+      font-size: 22px;
+      margin-bottom: 6px;
+    }
+
+    .card-text {
+      color: #94a3b8;
+      font-size: 14px;
+      margin-bottom: 22px;
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      color: #cbd5e1;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    input,
+    select {
+      width: 100%;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      background: rgba(2, 6, 23, 0.72);
+      color: #e5e7eb;
+      border-radius: 14px;
+      padding: 14px 15px;
+      outline: none;
+      transition: 0.2s;
+      font-size: 15px;
+    }
+
+    input::placeholder {
+      color: #64748b;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.12);
+    }
+
+    select option {
+      background: #020617;
+      color: #e5e7eb;
+    }
+
+    .file-box {
+      border: 1px dashed rgba(56, 189, 248, 0.45);
+      background: rgba(14, 165, 233, 0.08);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .file-box input {
+      border: none;
+      background: transparent;
+      padding: 0;
+    }
+
+    button {
+      width: 100%;
+      border: none;
+      border-radius: 999px;
+      padding: 15px 22px;
+      background: linear-gradient(135deg, #0ea5e9, #38bdf8);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 14px 36px rgba(14, 165, 233, 0.28);
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 44px rgba(14, 165, 233, 0.38);
+    }
+
+    #status {
+      margin-top: 18px;
+      min-height: 24px;
+      color: #7dd3fc;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .preview-card {
+      min-height: 420px;
+    }
+
+    .preview-box {
+      border-radius: 20px;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      background:
+        linear-gradient(135deg, rgba(14, 165, 233, 0.12), rgba(15, 23, 42, 0.7)),
+        rgba(2, 6, 23, 0.6);
+      min-height: 260px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px;
+      color: #94a3b8;
+      margin-bottom: 18px;
+    }
+
+    .preview-icon {
+      font-size: 46px;
+      margin-bottom: 12px;
+    }
+
+    .info-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .info-item {
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(2, 6, 23, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #94a3b8;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .info-item strong {
+      color: #e5e7eb;
+    }
+
+    @media (max-width: 850px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        gap: 14px;
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
+
 <body>
+  <main class="page">
+    <header class="topbar">
+      <div class="brand">Nancy<span>.</span> Admin</div>
+      <a href="/" class="back-link">← Back to Portfolio</a>
+    </header>
 
-<h2>Portfolio Media Upload</h2>
+    <section class="hero">
+      <div class="badge">Secure Portfolio Media Manager</div>
+      <h1>Upload Portfolio Media</h1>
+      <p class="subtitle">
+        Upload project videos, event photos, certificates, and portfolio media directly to your AWS S3 storage.
+        Details will be saved in DynamoDB using your existing Lambda flow.
+      </p>
+    </section>
 
-<input type="password" id="secret" placeholder="Admin Secret">
-<br><br>
+    <section class="layout">
+      <div class="card">
+        <h2>Media Details</h2>
+        <p class="card-text">Fill all fields carefully before uploading.</p>
 
-<input type="text" id="title" placeholder="Title">
-<br><br>
+        <div class="field">
+          <label for="secret">Admin Secret</label>
+          <input type="password" id="secret" placeholder="Enter admin secret" />
+        </div>
 
-<input type="text" id="description" placeholder="Description">
-<br><br>
+        <div class="field">
+          <label for="title">Title</label>
+          <input type="text" id="title" placeholder="Example: LifeLine Connect Demo" />
+        </div>
 
-<select id="type">
-  <option value="project_video">Project Video</option>
-  <option value="event_photo">Event Photo</option>
-  <option value="certificate">Certificate</option>
-</select>
+        <div class="field">
+          <label for="description">Description</label>
+          <input type="text" id="description" placeholder="Short description about this media" />
+        </div>
 
-<br><br>
+        <div class="field">
+          <label for="type">Media Type</label>
+          <select id="type">
+            <option value="project_video">Project Video</option>
+            <option value="event_photo">Event Photo</option>
+            <option value="certificate">Certificate</option>
+          </select>
+        </div>
 
-<input type="file" id="file" accept="image/*,video/*,.pdf">
+        <div class="field">
+          <label for="file">Choose File</label>
+          <div class="file-box">
+            <input type="file" id="file" accept="image/*,video/*,.pdf" />
+          </div>
+        </div>
 
-<br><br>
+        <button onclick="uploadMedia()">Upload Media</button>
+        <p id="status"></p>
+      </div>
 
-<button onclick="uploadMedia()">Upload</button>
+      <aside class="card preview-card">
+        <h2>Upload Preview</h2>
+        <p class="card-text">Your selected image, video, or PDF will be uploaded using your existing AWS flow.</p>
 
-<p id="status"></p>
+        <div class="preview-box">
+          <div>
+            <div class="preview-icon">☁️</div>
+            <strong>No file uploaded yet</strong>
+            <p style="margin-top: 8px;">Choose a file and click upload to save it in your portfolio media storage.</p>
+          </div>
+        </div>
 
-<script>
+        <div class="info-list">
+          <div class="info-item">
+            <strong>Step 1:</strong> Generate secure S3 upload URL.
+          </div>
+          <div class="info-item">
+            <strong>Step 2:</strong> Upload selected media file to S3.
+          </div>
+          <div class="info-item">
+            <strong>Step 3:</strong> Save media details in DynamoDB.
+          </div>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <script>
 const GENERATE_UPLOAD_URL = "https://mez4ale3yaeg7qgnxhqvd2tfze0gdriq.lambda-url.ap-south-1.on.aws/";
 const SAVE_MEDIA_URL = "https://536i4uxik3pxg5u6j64ldbvwwm0uvnlz.lambda-url.ap-south-1.on.aws/";
 
@@ -132,7 +442,6 @@ async function uploadMedia() {
     console.error(error);
   }
 }
-</script>
-
+  </script>
 </body>
 </html>

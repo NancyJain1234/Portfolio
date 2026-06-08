@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Messages</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: white;
+      padding: 30px;
+    }
+
+    h1 {
+      color: #38bdf8;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: #1e293b;
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #334155;
+      text-align: left;
+    }
+
+    th {
+      background: #0284c7;
+    }
+
+    tr:hover {
+      background: #334155;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Contact Messages</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Message</th>
+        <th>Created At</th>
+      </tr>
+    </thead>
+    <tbody id="messagesTable"></tbody>
+  </table>
+
+  <script>
+    const API_URL = "https://n2ji323uaxyuc4etlz473lk6ty0zhvdp.lambda-url.ap-south-1.on.aws/";
+
+    async function loadMessages() {
+      const response = await fetch(API_URL);
+      const result = await response.json();
+
+      const messages = JSON.parse(result.body).messages;
+      const table = document.getElementById("messagesTable");
+
+      messages.forEach(row => {
+        const tr = document.createElement("tr");
+
+        row.forEach(value => {
+          const td = document.createElement("td");
+          td.textContent = value;
+          tr.appendChild(td);
+        });
+
+        table.appendChild(tr);
+      });
+    }
+
+    loadMessages();
+  </script>
+
+</body>
+</html>

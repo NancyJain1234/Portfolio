@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Media Upload</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(14, 165, 233, 0.22), transparent 32%),
+        radial-gradient(circle at bottom right, rgba(56, 189, 248, 0.12), transparent 35%),
+        #020617;
+      color: #e5e7eb;
+      padding: 32px 18px;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 34px;
+    }
+
+    .brand {
+      font-size: 22px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: 0.4px;
+    }
+
+    .brand span {
+      color: #38bdf8;
+    }
+
+    .back-link {
+      color: #cbd5e1;
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.7);
+      transition: 0.2s;
+      font-size: 14px;
+    }
+
+    .back-link:hover {
+      color: #38bdf8;
+      border-color: rgba(56, 189, 248, 0.55);
+    }
+
+    .hero {
+      margin-bottom: 28px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(14, 165, 233, 0.12);
+      color: #7dd3fc;
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      font-size: 13px;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      font-size: clamp(32px, 5vw, 54px);
+      line-height: 1.05;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+
+    .subtitle {
+      max-width: 680px;
+      color: #94a3b8;
+      line-height: 1.7;
+      font-size: 16px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .card {
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(15, 23, 42, 0.72);
+      backdrop-filter: blur(18px);
+      border-radius: 24px;
+      padding: 26px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+    }
+
+    .card h2 {
+      color: #fff;
+      font-size: 22px;
+      margin-bottom: 6px;
+    }
+
+    .card-text {
+      color: #94a3b8;
+      font-size: 14px;
+      margin-bottom: 22px;
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      color: #cbd5e1;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    input,
+    select {
+      width: 100%;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      background: rgba(2, 6, 23, 0.72);
+      color: #e5e7eb;
+      border-radius: 14px;
+      padding: 14px 15px;
+      outline: none;
+      transition: 0.2s;
+      font-size: 15px;
+    }
+
+    input::placeholder {
+      color: #64748b;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.12);
+    }
+
+    select option {
+      background: #020617;
+      color: #e5e7eb;
+    }
+
+    .file-box {
+      border: 1px dashed rgba(56, 189, 248, 0.45);
+      background: rgba(14, 165, 233, 0.08);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .file-box input {
+      border: none;
+      background: transparent;
+      padding: 0;
+    }
+
+    button {
+      width: 100%;
+      border: none;
+      border-radius: 999px;
+      padding: 15px 22px;
+      background: linear-gradient(135deg, #0ea5e9, #38bdf8);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 14px 36px rgba(14, 165, 233, 0.28);
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 44px rgba(14, 165, 233, 0.38);
+    }
+
+    #status {
+      margin-top: 18px;
+      min-height: 24px;
+      color: #7dd3fc;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    @media (max-width: 850px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        gap: 14px;
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <header class="topbar">
+      <div class="brand">Nancy<span>.</span> Admin</div>
+      <a href="admin-dashboard.html" class="back-link">&larr; Back to Admin Dashboard</a>
+    </header>
+
+    <section class="hero">
+      <div class="badge">Secure Portfolio Media Manager</div>
+      <h1>Upload Portfolio Media</h1>
+      <p class="subtitle">
+        Upload project videos, event photos, certificates, and portfolio media directly to your AWS S3 storage.
+        Details will be saved using your existing Lambda flow.
+      </p>
+    </section>
+
+    <section class="layout">
+      <div class="card">
+        <h2>Media Details</h2>
+        <p class="card-text">Fill all fields carefully before uploading.</p>
+
+        <div class="field">
+          <label for="title">Title</label>
+          <input type="text" id="title" placeholder="Example: LifeLine Connect Demo" />
+        </div>
+
+        <div class="field">
+          <label for="description">Description</label>
+          <input type="text" id="description" placeholder="Short description about this media" />
+        </div>
+
+        <div class="field">
+          <label for="type">Media Type</label>
+          <select id="type">
+            <option value="project_video">Project Video</option>
+            <option value="event_photo">Event Photo</option>
+            <option value="certificate">Certificate</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="file">Choose File</label>
+          <div class="file-box">
+            <input type="file" id="file" accept="image/*,video/*,.pdf" />
+          </div>
+        </div>
+
+        <button onclick="uploadMedia()">Upload Media</button>
+        <p id="status"></p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+const API_URL = "https://4tuojd3urjilgxo4cvzz5alin40poezc.lambda-url.ap-south-1.on.aws/";
+
+if(sessionStorage.getItem("adminLoggedIn") !== "true"){
+  window.location.href = "admin-login.html";
+}
+
+async function uploadMedia() {
+  const status = document.getElementById("status");
+
+  const file = document.getElementById("file").files[0];
+  const title = document.getElementById("title").value.trim();
+  const description = document.getElementById("description").value.trim();
+  const type = document.getElementById("type").value;
+  const secret = sessionStorage.getItem("adminSecret");
+
+  if (!secret) {
+    status.innerText = "Enter admin secret";
+    return;
+  }
+
+  if (!title || !description) {
+    status.innerText = "Enter title and description";
+    return;
+  }
+
+  if (!file) {
+    status.innerText = "Choose a file first";
+    return;
+  }
+
+  try {
+    status.innerText = "Generating upload URL...";
+
+    const uploadResponse = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-secret": secret
+      },
+      body: JSON.stringify({
+        action: "generateUploadUrl",
+        fileName: file.name,
+        fileType: file.type || "application/octet-stream"
+      })
+    });
+
+    const uploadBody = await uploadResponse.json();
+
+    if (!uploadResponse.ok || !uploadBody.success) {
+      status.innerText = uploadBody.message || uploadBody.error || "Failed to generate upload URL";
+      return;
+    }
+
+    status.innerText = "Uploading file to S3...";
+
+    const s3Response = await fetch(uploadBody.uploadUrl, {
+      method: "PUT",
+      headers: {
+        "Content-Type": file.type || "application/octet-stream"
+      },
+      body: file
+    });
+
+    if (!s3Response.ok) {
+      status.innerText = "S3 upload failed";
+      return;
+    }
+
+    status.innerText = "Saving media details...";
+
+    const saveResponse = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-secret": secret
+      },
+      body: JSON.stringify({
+        action: "saveMedia",
+        title: title,
+        description: description,
+        type: type,
+        fileUrl: uploadBody.fileUrl,
+        s3Key: uploadBody.s3Key,
+        fileName: file.name
+      })
+    });
+
+    const saveBody = await saveResponse.json();
+
+    if (!saveResponse.ok || !saveBody.success) {
+      status.innerText = saveBody.message || saveBody.error || "Save failed";
+      return;
+    }
+
+    status.innerText = "Upload Successful!";
+  } catch (error) {
+    status.innerText = "Error: " + error.message;
+  }
+}
+</script>
+</body>
+</html>

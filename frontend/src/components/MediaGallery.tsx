@@ -19,10 +19,24 @@ const MediaGallery = () => {
   useEffect(() => {
     const loadMedia = async () => {
       try {
-        const response = await fetch(API_URL);
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            action: "getMedia",
+          }),
+        });
+
         const data = await response.json();
 
         console.log("MEDIA DATA:", data);
+
+        if (!response.ok || !data.success) {
+          setStatus(data.error || data.message || "Failed to load media");
+          return;
+        }
 
         const mediaItems = data.items || [];
 
@@ -63,14 +77,14 @@ const MediaGallery = () => {
               </p>
 
               {item.fileName?.toLowerCase().endsWith(".pdf") ? (
-                <div className="flex flex-col items-center justify-center h-52 rounded-xl bg-slate-700 p-4">
-                  <div className="text-5xl mb-3">📄</div>
+                <div className="flex h-52 flex-col items-center justify-center rounded-xl bg-slate-700 p-4">
+                  <div className="mb-3 text-5xl">📄</div>
 
                   <a
                     href={item.fileUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="rounded-lg bg-sky-500 px-4 py-2 text-white font-medium hover:bg-sky-600"
+                    className="rounded-lg bg-sky-500 px-4 py-2 font-medium text-white hover:bg-sky-600"
                   >
                     View PDF
                   </a>

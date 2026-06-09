@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Messages</title>
+  <style>
+    body{font-family:Arial;background:#020617;color:white;padding:30px}
+    h1{color:#38bdf8}
+    table{width:100%;border-collapse:collapse;margin-top:20px;background:#0f172a}
+    th,td{padding:12px;border:1px solid #334155;text-align:left}
+    th{background:#0284c7}
+    button{padding:10px 18px;border:none;border-radius:999px;background:#38bdf8;color:white;cursor:pointer}
+    #status{margin-top:20px;color:#fbbf24}
+  </style>
+</head>
+<body>
+
+<button onclick="location.href='admin-dashboard.html'">&larr; Back</button>
+<h1>Contact Messages</h1>
+<p id="status">Loading messages...</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Message</th>
+      <th>Created At</th>
+    </tr>
+  </thead>
+  <tbody id="messagesTable"></tbody>
+</table>
+
+<script>
+if (sessionStorage.getItem("adminLoggedIn") !== "true") {
+  window.location.href = "admin-login.html";
+}
+
+const API_URL = "https://4tuojd3urjilgxo4cvzz5alin40poezc.lambda-url.ap-south-1.on.aws/";
+
+async function loadMessages() {
+  const status = document.getElementById("status");
+  const secret = sessionStorage.getItem("adminSecret");
+
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-secret": secret
+      },
+      body: JSON.stringify({
+        action: "getMessages"
+      })
+    });
+
+    const result = await response.json();
+
+    if (!result.success) {
+      status.innerText = result.message || result.error || "Unauthorized";
+      return;
+    }
+
+    const table = document.getElementById("messagesTable");
+    table.innerHTML = "";
+
+    if (!result.messages || result.messages.length === 0) {
+      status.innerText = "No messages found.";
+      return;
+    }
+
+    result.messages.forEach(msg => {
+      const tr = document.createElement("tr");
+
+      [msg.id, msg.name, msg.email, msg.message, msg.createdAt].forEach(value => {
+        const td = document.createElement("td");
+        td.textContent = value || "";
+        tr.appendChild(td);
+      });
+
+      table.appendChild(tr);
+    });
+
+    status.innerText = "Messages loaded successfully.";
+
+  } catch (error) {
+    status.innerText = "Error loading messages: " + error.message;
+  }
+}
+
+loadMessages();
+</script>
+
+</body>
+</html>

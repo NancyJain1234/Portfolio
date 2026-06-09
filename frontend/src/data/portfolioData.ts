@@ -8,7 +8,7 @@ export const personalInfo = {
   phone: "+91 9024756521",
   linkedin: "https://www.linkedin.com/in/nancy-jain-855663247/",
   github: "https://github.com/NancyJain1234",
-  resumeUrl: "/Nancy_Jain_Resume.pdf",
+  resumeUrl: "/nancy_resume_latest.pdf",
 };
 
 export const stats = [

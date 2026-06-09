@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Dashboard</title>
+  <style>
+    body{font-family:Arial;background:#020617;color:white;padding:40px}
+    .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px;margin-top:30px}
+    .card{background:#0f172a;padding:30px;border-radius:20px;border:1px solid #334155;cursor:pointer}
+    .card:hover{border-color:#38bdf8}
+    button{padding:12px 20px;border:none;border-radius:999px;background:#ef4444;color:white;cursor:pointer}
+  </style>
+</head>
+<body>
+
+<h1>Nancy Admin Dashboard</h1>
+<p>Manage portfolio media and contact messages.</p>
+
+<button onclick="logout()">Logout</button>
+
+<div class="cards">
+  <div class="card" onclick="location.href='admin-upload.html'">
+    <h2>Upload Media</h2>
+    <p>Upload certificates, images, and videos.</p>
+  </div>
+
+  <div class="card" onclick="location.href='admin-messages.html'">
+    <h2>View Messages</h2>
+    <p>See contact form messages from PostgreSQL.</p>
+  </div>
+</div>
+
+<script>
+if(sessionStorage.getItem("adminLoggedIn") !== "true"){
+  window.location.href = "admin.html";
+}
+
+function logout(){
+  sessionStorage.clear();
+  window.location.href = "admin.html";
+}
+</script>
+
+</body>
+</html>

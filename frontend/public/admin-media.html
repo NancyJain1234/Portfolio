@@ -30,15 +30,14 @@ if(sessionStorage.getItem("adminLoggedIn") !== "true"){
   window.location.href = "admin-login.html";
 }
 
-const GET_MEDIA_URL = "https://aqoisdc52okoa23a5fl53zdkru0lfiuz.lambda-url.ap-south-1.on.aws/";
-const DELETE_MEDIA_URL = "https://ubto2pk5ejftmzbhe6xbfepaca0jfmjq.lambda-url.ap-south-1.on.aws/";
+const API_URL = "https://4tuojd3urjilgxo4cvzz5alin40poezc.lambda-url.ap-south-1.on.aws/";
 
 async function loadMedia(){
   const status = document.getElementById("status");
   const grid = document.getElementById("mediaGrid");
 
   try{
-    const response = await fetch(GET_MEDIA_URL);
+    const response = await fetch(API_URL);
     const data = await response.json();
 
     const items = data.items || [];
@@ -82,13 +81,15 @@ async function deleteMedia(id){
   }
 
   try{
-    const response = await fetch(DELETE_MEDIA_URL, {
+    const response = await fetch(API_URL, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        "x-admin-secret": secret
+        "Content-Type": "application/json"
       },
-      body: JSON.stringify({ id })
+      body: JSON.stringify({
+        action: "deleteMedia",
+        id: id
+      })
     });
 
     const result = await response.json();

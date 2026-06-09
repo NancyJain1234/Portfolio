@@ -201,51 +201,6 @@
       text-align: center;
     }
 
-    .preview-card {
-      min-height: 420px;
-    }
-
-    .preview-box {
-      border-radius: 20px;
-      border: 1px solid rgba(148, 163, 184, 0.18);
-      background:
-        linear-gradient(135deg, rgba(14, 165, 233, 0.12), rgba(15, 23, 42, 0.7)),
-        rgba(2, 6, 23, 0.6);
-      min-height: 260px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 24px;
-      color: #94a3b8;
-      margin-bottom: 18px;
-    }
-
-    .preview-icon {
-      font-size: 46px;
-      margin-bottom: 12px;
-    }
-
-    .info-list {
-      display: grid;
-      gap: 12px;
-      margin-top: 18px;
-    }
-
-    .info-item {
-      padding: 14px;
-      border-radius: 16px;
-      background: rgba(2, 6, 23, 0.5);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      color: #94a3b8;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
-    .info-item strong {
-      color: #e5e7eb;
-    }
-
     @media (max-width: 850px) {
       .layout {
         grid-template-columns: 1fr;
@@ -310,37 +265,11 @@
         <button onclick="uploadMedia()">Upload Media</button>
         <p id="status"></p>
       </div>
-
-      <aside class="card preview-card">
-        <h2>Upload Preview</h2>
-        <p class="card-text">Your selected image, video, or PDF will be uploaded using your existing AWS flow.</p>
-
-        <div class="preview-box">
-          <div>
-            <div class="preview-icon">☁️</div>
-            <strong>No file uploaded yet</strong>
-            <p style="margin-top: 8px;">Choose a file and click upload to save it in your portfolio media storage.</p>
-          </div>
-        </div>
-
-        <div class="info-list">
-          <div class="info-item">
-            <strong>Step 1:</strong> Generate secure S3 upload URL.
-          </div>
-          <div class="info-item">
-            <strong>Step 2:</strong> Upload selected media file to S3.
-          </div>
-          <div class="info-item">
-            <strong>Step 3:</strong> Save media details.
-          </div>
-        </div>
-      </aside>
     </section>
   </main>
 
   <script>
-const GENERATE_UPLOAD_URL = "https://lovis3ivc6s3j6cv3zoi4dxboe0tojfq.lambda-url.ap-south-1.on.aws/";
-const SAVE_MEDIA_URL = "https://536i4uxik3pxg5u6j64ldbvwwm0uvnlz.lambda-url.ap-south-1.on.aws/";
+const API_URL = "https://4tuojd3urjilgxo4cvzz5alin40poezc.lambda-url.ap-south-1.on.aws/";
 
 if(sessionStorage.getItem("adminLoggedIn") !== "true"){
   window.location.href = "admin-login.html";
@@ -373,13 +302,14 @@ async function uploadMedia() {
   try {
     status.innerText = "Generating upload URL...";
 
-    const uploadResponse = await fetch(GENERATE_UPLOAD_URL, {
+    const uploadResponse = await fetch(API_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "x-admin-secret": secret
       },
       body: JSON.stringify({
+        action: "generateUploadUrl",
         fileName: file.name,
         fileType: file.type || "application/octet-stream"
       })
@@ -411,13 +341,14 @@ async function uploadMedia() {
 
     status.innerText = "Saving media details...";
 
-    const saveResponse = await fetch(SAVE_MEDIA_URL, {
+    const saveResponse = await fetch(API_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "x-admin-secret": secret
       },
       body: JSON.stringify({
+        action: "saveMedia",
         title: title,
         description: description,
         type: type,
@@ -436,11 +367,12 @@ async function uploadMedia() {
     }
 
     status.innerText = "Upload Successful!";
+
   } catch (error) {
     status.innerText = "Error: " + error.message;
     console.error(error);
   }
 }
-  </script>
+</script>
 </body>
 </html>

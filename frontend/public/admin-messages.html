@@ -37,14 +37,23 @@ if (sessionStorage.getItem("adminLoggedIn") !== "true") {
   window.location.href = "admin-login.html";
 }
 
-const API_URL = "https://n2ji323uaxyuc4etlz473lk6ty0zhvdp.lambda-url.ap-south-1.on.aws/";
+const API_URL = "https://4tuojd3urjilgxo4cvzz5alin40poezc.lambda-url.ap-south-1.on.aws/";
 
 async function loadMessages() {
   const status = document.getElementById("status");
   const secret = sessionStorage.getItem("adminSecret");
 
   try {
-    const response = await fetch(`${API_URL}?secret=${encodeURIComponent(secret)}`);
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-secret": secret
+      },
+      body: JSON.stringify({
+        action: "getMessages"
+      })
+    });
     const result = await response.json();
 
     if (!result.success) {
@@ -63,7 +72,7 @@ async function loadMessages() {
     result.messages.forEach(msg => {
       const tr = document.createElement("tr");
 
-      [msg.id, msg.name, msg.email, msg.message, msg.created_at].forEach(value => {
+      [msg.id, msg.name, msg.email, msg.message, msg.createdAt].forEach(value => {
         const td = document.createElement("td");
         td.textContent = value || "";
         tr.appendChild(td);

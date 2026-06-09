@@ -44,13 +44,7 @@ async function loadMessages() {
   const secret = sessionStorage.getItem("adminSecret");
 
   try {
-    const response = await fetch(API_URL, {
-      method: "GET",
-      headers: {
-        "x-admin-secret": secret
-      }
-    });
-
+    const response = await fetch(`${API_URL}?secret=${encodeURIComponent(secret)}`);
     const result = await response.json();
 
     if (!result.success) {
@@ -69,13 +63,7 @@ async function loadMessages() {
     result.messages.forEach(msg => {
       const tr = document.createElement("tr");
 
-      [
-        msg.id,
-        msg.name,
-        msg.email,
-        msg.message,
-        msg.created_at
-      ].forEach(value => {
+      [msg.id, msg.name, msg.email, msg.message, msg.created_at].forEach(value => {
         const td = document.createElement("td");
         td.textContent = value || "";
         tr.appendChild(td);

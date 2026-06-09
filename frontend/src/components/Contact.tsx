@@ -3,7 +3,7 @@ import { useState } from "react";
 const API_URL =
   "https://4tuojd3urjilgxo4cvzz5alin40poezc.lambda-url.ap-south-1.on.aws/";
 
-  const Contact = () => {
+const Contact = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -31,17 +31,21 @@ const API_URL =
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          action: "contactMessage",
+          ...formData,
+        }),
       });
 
       const result = await response.json();
 
-      if (!response.ok) {
-        setStatus(result.detail || "Something went wrong.");
+      if (!response.ok || !result.success) {
+        setStatus(result.error || result.message || "Something went wrong.");
         return;
       }
 
       setStatus("Message sent successfully.");
+
       setFormData({
         name: "",
         email: "",
@@ -118,11 +122,7 @@ const API_URL =
             Send Message
           </button>
 
-          {status && (
-            <p className="mt-4 text-sm text-sky-300">
-              {status}
-            </p>
-          )}
+          {status && <p className="mt-4 text-sm text-sky-300">{status}</p>}
         </form>
       </div>
     </section>

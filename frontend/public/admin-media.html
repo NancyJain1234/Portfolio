@@ -37,11 +37,24 @@ async function loadMedia(){
   const grid = document.getElementById("mediaGrid");
 
   try{
-    const response = await fetch(API_URL);
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        action: "getMedia"
+      })
+    });
+
     const data = await response.json();
 
-    const items = data.items || [];
+    if (!data.success) {
+      status.innerText = data.message || data.error || "Failed to load media";
+      return;
+    }
 
+    const items = data.items || [];
     grid.innerHTML = "";
 
     if(items.length === 0){
@@ -76,7 +89,7 @@ async function loadMedia(){
 async function deleteMedia(id){
   const secret = sessionStorage.getItem("adminSecret");
 
-  if(!confirm("Delete this media record?")){
+  if(!confirm("Delete this media from S3 and PostgreSQL?")){
     return;
   }
 
@@ -84,7 +97,8 @@ async function deleteMedia(id){
     const response = await fetch(API_URL, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "x-admin-secret": secret
       },
       body: JSON.stringify({
         action: "deleteMedia",

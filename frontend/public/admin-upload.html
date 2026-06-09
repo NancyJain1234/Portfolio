@@ -318,8 +318,7 @@ async function uploadMedia() {
     const uploadBody = await uploadResponse.json();
 
     if (!uploadResponse.ok || !uploadBody.success) {
-      status.innerText = uploadBody.message || "Failed to generate upload URL";
-      console.log(uploadBody);
+      status.innerText = uploadBody.message || uploadBody.error || "Failed to generate upload URL";
       return;
     }
 
@@ -335,7 +334,6 @@ async function uploadMedia() {
 
     if (!s3Response.ok) {
       status.innerText = "S3 upload failed";
-      console.log(await s3Response.text());
       return;
     }
 
@@ -361,16 +359,13 @@ async function uploadMedia() {
     const saveBody = await saveResponse.json();
 
     if (!saveResponse.ok || !saveBody.success) {
-      status.innerText = saveBody.message || "Save failed";
-      console.log(saveBody);
+      status.innerText = saveBody.message || saveBody.error || "Save failed";
       return;
     }
 
     status.innerText = "Upload Successful!";
-
   } catch (error) {
     status.innerText = "Error: " + error.message;
-    console.error(error);
   }
 }
 </script>

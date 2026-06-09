@@ -264,7 +264,7 @@
   <main class="page">
     <header class="topbar">
       <div class="brand">Nancy<span>.</span> Admin</div>
-      <a href="/" class="back-link">← Back to Portfolio</a>
+      <a href="admin-dashboard.html" class="back-link">&larr; Back to Admin Dashboard</a>
     </header>
 
     <section class="hero">
@@ -272,7 +272,7 @@
       <h1>Upload Portfolio Media</h1>
       <p class="subtitle">
         Upload project videos, event photos, certificates, and portfolio media directly to your AWS S3 storage.
-        Details will be saved in DynamoDB using your existing Lambda flow.
+        Details will be saved using your existing Lambda flow.
       </p>
     </section>
 
@@ -280,10 +280,6 @@
       <div class="card">
         <h2>Media Details</h2>
         <p class="card-text">Fill all fields carefully before uploading.</p>
-
-        <div class="field">
-          <label for="secret">Admin Secret</label>
-        </div>
 
         <div class="field">
           <label for="title">Title</label>
@@ -413,7 +409,7 @@ async function uploadMedia() {
       return;
     }
 
-    status.innerText = "Saving details in DynamoDB...";
+    status.innerText = "Saving media details...";
 
     const saveResponse = await fetch(SAVE_MEDIA_URL, {
       method: "POST",

@@ -62,7 +62,20 @@ const MediaGallery = () => {
                 {item.description}
               </p>
 
-              {item.type === "project_video" ? (
+              {item.fileName?.toLowerCase().endsWith(".pdf") ? (
+                <div className="flex flex-col items-center justify-center h-52 rounded-xl bg-slate-700 p-4">
+                  <div className="text-5xl mb-3">📄</div>
+
+                  <a
+                    href={item.fileUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-lg bg-sky-500 px-4 py-2 text-white font-medium hover:bg-sky-600"
+                  >
+                    View PDF
+                  </a>
+                </div>
+              ) : item.type === "project_video" ? (
                 <video controls className="w-full rounded-xl">
                   <source src={item.fileUrl} />
                 </video>

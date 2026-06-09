@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-const GET_MEDIA_URL =
-  "https://aqoisdc52okoa23a5fl53zdkru0lfiuz.lambda-url.ap-south-1.on.aws/";
+const API_URL =
+  "https://4tuojd3urjilgxo4cvzz5alin40poezc.lambda-url.ap-south-1.on.aws/";
 
 type MediaItem = {
   id: string;
@@ -19,7 +19,7 @@ const MediaGallery = () => {
   useEffect(() => {
     const loadMedia = async () => {
       try {
-        const response = await fetch(GET_MEDIA_URL);
+        const response = await fetch(API_URL);
         const data = await response.json();
 
         console.log("MEDIA DATA:", data);

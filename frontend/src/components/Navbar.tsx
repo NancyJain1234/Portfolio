@@ -14,14 +14,8 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
 
   const handleAdminClick = () => {
-    const password = prompt("Enter Admin Password");
-
-    if (password === "nancyupload") {
-      window.location.href = "/admin-upload.html";
-    } else if (password !== null) {
-      alert("Incorrect Password");
-    }
-  };
+  window.location.href = "/admin-login.html";
+};
 
   return (
     <nav className="fixed left-0 top-0 z-50 w-full border-b border-white/10 bg-slate-950/80 backdrop-blur-lg">
